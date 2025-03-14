@@ -1,0 +1,39 @@
+# Cryptocurrency Analysis Configuration
+
+# Exchange and symbol settings
+exchange: 'binanceus'  # Binance US version - no regional restrictions
+symbol: 'ETH/USD'      # Format: BASE/QUOTE - Ethereum is widely available
+
+# API key settings (optional for public data)
+# api_keys:  # Uncomment and add keys if needed for private API access
+#   - 'YOUR_BINANCE_US_API_KEY'
+
+# Time frame settings
+timeframe: '4h'  # Options: 1m, 5m, 15m, 30m, 1h, 4h, 1d, 1w
+
+# Backtest settings
+backtest:
+  start_date: '2022-01-01'  # Format: YYYY-MM-DD
+  end_date: ''              # Empty for current date
+  
+# Harmonic patterns to analyze
+patterns:
+  - 'gartley'
+  - 'butterfly'
+  - 'bat'
+  - 'crab'
+  - 'shark'
+  - 'cypher'
+
+# Trading parameters
+trading:
+  initial_capital: 10000
+  position_size: 0.1  # Percentage of capital per trade
+  stop_loss: 0.02     # Percentage from entry
+  take_profit: 0.05   # Percentage from entry
+
+# Output settings
+output:
+  save_results: true
+  plot_charts: true
+  verbose: true 

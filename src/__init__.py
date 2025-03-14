@@ -1,0 +1,1 @@
+# Cryptocurrency Harmonic Pattern Analyzer package 

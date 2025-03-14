@@ -1,0 +1,4 @@
+pattern_id,entry_date,exit_date,entry_price,exit_price,direction,profit_pct,hit_target,hit_stop,bars_held
+1,2022-10-29,2022-11-04,20817.91,21234.2682,bearish,-0.01999999999999994,False,True,6
+2,2022-10-29,2022-11-04,20817.91,21234.2682,bearish,-0.01999999999999994,False,True,6
+3,2022-10-29,2022-11-04,20817.91,21234.2682,bearish,-0.01999999999999994,False,True,6
