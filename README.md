@@ -4,8 +4,8 @@ This application analyzes cryptocurrency data to identify which harmonic pattern
 
 ## Features
 
-- Fetch cryptocurrency data from various exchanges or free APIs like Alpha Vantage
-- Detect multiple harmonic patterns (Gartley, Butterfly, etc.)
+- Fetch cryptocurrency data from various exchanges including Binance.US
+- Detect multiple harmonic patterns (Gartley, Butterfly, Bat, Crab, Shark, Cypher)
 - Backtest pattern performance with customizable parameters
 - Generate performance reports and visualizations
 - Compare different patterns to find the best performer
@@ -23,9 +23,10 @@ This application analyzes cryptocurrency data to identify which harmonic pattern
    pip install -r requirements.txt
    ```
 
-3. Get a free API key:
+3. API keys (optional for public data):
+   - For Binance.US: API keys are optional for fetching public market data
    - For Alpha Vantage: Visit [Alpha Vantage](https://www.alphavantage.co/support/#api-key) to get a free API key
-   - Add your API key to the `config.yaml` file or provide it via command line
+   - Add your API key(s) to the `config.yaml` file or provide it via command line
 
 ## Configuration
 
@@ -33,19 +34,20 @@ The application uses a YAML configuration file (`config.yaml`) to specify the an
 
 ```yaml
 # Exchange and symbol settings
-exchange: 'alphavantage'  # Free API alternative to paid exchanges
-symbol: 'BTC/USD'  # Format: BASE/QUOTE
+exchange: 'binanceus'  # Binance US version - no regional restrictions
+symbol: 'ETH/USD'      # Format: BASE/QUOTE
 
-# API key settings
-api_key: 'YOUR_ALPHA_VANTAGE_API_KEY'  # Get a free key at https://www.alphavantage.co/support/#api-key
+# API key settings (optional for public data)
+# api_keys:  # Uncomment and add keys if needed for private API access
+#   - 'YOUR_BINANCE_US_API_KEY'
 
 # Time frame settings
-timeframe: '1d'  # Options: 1m, 5m, 15m, 30m, 1h, 4h, 1d, 1w
+timeframe: '4h'  # Options: 1m, 5m, 15m, 30m, 1h, 4h, 1d, 1w
 
 # Backtest settings
 backtest:
-  start_date: '2023-01-01'  # Format: YYYY-MM-DD
-  end_date: '2023-12-31'    # Format: YYYY-MM-DD
+  start_date: '2024-01-01'  # Format: YYYY-MM-DD
+  end_date: ''              # Empty for current date
   
 # Harmonic patterns to analyze
 patterns:
@@ -100,15 +102,23 @@ python app.py --api-key YOUR_API_KEY
 
 The application supports multiple data sources:
 
-1. **Alpha Vantage** (Free API with limits)
-   - Provides free cryptocurrency data with a rate limit
+1. **Binance.US** (Recommended)
+   - No regional restrictions in the US
+   - High rate limits and good data availability
+   - No API key required for public market data
+   - Set `exchange: 'binanceus'` in the config file
+
+2. **Alpha Vantage** (Free API with strict limits)
+   - Provides free cryptocurrency data with rate limits (5 calls/minute, 500/day)
    - Requires an API key (get one at https://www.alphavantage.co/support/#api-key)
    - Set `exchange: 'alphavantage'` in the config file
+   - Limited cryptocurrency symbols
 
-2. **CCXT-supported exchanges**
+3. **Other CCXT-supported exchanges**
    - Supports numerous cryptocurrency exchanges through the CCXT library
    - Some exchanges may require API keys for data access
-   - Example: `exchange: 'binance'` or `exchange: 'coinbase'`
+   - Example: `exchange: 'coinbase'` or `exchange: 'kraken'`
+   - Note: Regular Binance (`exchange: 'binance'`) has regional restrictions
 
 ## Output
 
@@ -124,12 +134,16 @@ All outputs are saved in the specified output directory (default: `results/`).
 
 ## Supported Harmonic Patterns
 
-Currently, the application supports the following harmonic patterns:
+The application supports the following harmonic patterns:
 
 - Gartley
 - Butterfly
+- Bat
+- Crab
+- Shark
+- Cypher
 
-More patterns can be added by implementing additional pattern classes.
+Each pattern has specific Fibonacci ratio requirements and is detected based on price swing points.
 
 ## Extending the Application
 
@@ -152,4 +166,4 @@ To add support for a new data source:
 
 ## License
 
-This project is licensed under the MIT License - see the LICENSE file for details. # PrismAlgo
+This project is licensed under the MIT License - see the LICENSE file for details.
