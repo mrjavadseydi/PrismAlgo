@@ -15,7 +15,7 @@ This application analyzes cryptocurrency data to identify which harmonic pattern
 
 1. Clone this repository:
    ```
-   git clone [<repository-url>](https://github.com/mrjavadseydi/PrismAlgo)
+   git clone https://github.com/mrjavadseydi/PrismAlgo
    cd PrismAlgo
    ```
 
