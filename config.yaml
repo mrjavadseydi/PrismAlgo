@@ -1,29 +1,54 @@
 # Cryptocurrency Analysis Configuration
 
 # Exchange and symbol settings
-exchange: 'binanceus'  # Binance US version - no regional restrictions
-symbol: 'ETH/USD'      # Format: BASE/QUOTE - Ethereum is widely available
+exchange: binanceus
+symbol: DOGE/USDT
 
 # API key settings (optional for public data)
 # api_keys:  # Uncomment and add keys if needed for private API access
 #   - 'YOUR_BINANCE_US_API_KEY'
 
 # Time frame settings
-timeframe: '1h'  # Options: 1m, 5m, 15m, 30m, 1h, 4h, 1d, 1w
+timeframe: 4h
 
 # Backtest settings
 backtest:
-  start_date: '2024-12-01'  # Format: YYYY-MM-DD
-  end_date: ''              # Empty for current date
+  start_date: 2024-12-01
+  end_date: ''
   
 # Harmonic patterns to analyze
 patterns:
-  - 'gartley'
-  - 'butterfly'
-  - 'bat'
-  - 'crab'
-  - 'shark'
-  - 'cypher'
+  - butterfly
+  - gartley
+  - bat
+  - crab
+  - shark
+  - cypher
+
+# Price action analysis settings
+price_action:
+  enabled: true
+  market_structure:
+    enabled: true
+    window_size: 20
+    threshold: 0.02
+  candlestick:
+    enabled: true
+    body_threshold: 0.6
+    doji_threshold: 0.1
+  volume:
+    enabled: true
+    window_size: 20
+  pattern_recognition:
+    enabled: true
+    extrema_window: 10
+    price_cluster_eps: 0.01
+    price_cluster_min_samples: 2
+    channel_lookback: 20
+    channel_deviation: 0.02
+    zz_deviation: 0.03
+    pattern_min_points: 4
+    pattern_max_lookback: 100
 
 # Trading parameters
 trading:
@@ -31,9 +56,17 @@ trading:
   position_size: 0.1  # Percentage of capital per trade
   stop_loss: 0.02     # Percentage from entry
   take_profit: 0.05   # Percentage from entry
+  risk_per_trade: 0.02
+  stop_loss_atr_multiplier: 1.5
+  take_profit_atr_multiplier: 3.0
+  trailing_stop: true
+  trailing_stop_activation: 0.01
+  trailing_stop_step: 0.005
 
 # Output settings
 output:
   save_results: true
   plot_charts: true
-  verbose: true 
+  verbose: true
+  save_charts: true
+  save_report: true 

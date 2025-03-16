@@ -1,7 +1,7 @@
 import yaml
 import logging
 import os
-from datetime import datetime
+from datetime import datetime, date
 
 logger = logging.getLogger('Config')
 
@@ -82,16 +82,39 @@ class Config:
         
         # Validate backtest dates
         try:
-            start_date = datetime.strptime(self.config['backtest']['start_date'], '%Y-%m-%d')
+            # Get start date
+            start_date_value = self.config['backtest']['start_date']
+            # Check if start_date is already a datetime object
+            if isinstance(start_date_value, datetime):
+                start_date = start_date_value
+            elif isinstance(start_date_value, date):
+                # Convert date to datetime for consistent comparison
+                start_date = datetime.combine(start_date_value, datetime.min.time())
+            else:
+                start_date = datetime.strptime(start_date_value, '%Y-%m-%d')
+            
+            # Get end date if it exists
+            end_date = None
             if 'end_date' in self.config['backtest'] and self.config['backtest']['end_date']:
-                end_date = datetime.strptime(self.config['backtest']['end_date'], '%Y-%m-%d')
+                end_date_value = self.config['backtest']['end_date']
+                # Check if end_date is already a datetime object
+                if isinstance(end_date_value, datetime):
+                    end_date = end_date_value
+                elif isinstance(end_date_value, date):
+                    # Convert date to datetime for consistent comparison
+                    end_date = datetime.combine(end_date_value, datetime.min.time())
+                else:
+                    end_date = datetime.strptime(end_date_value, '%Y-%m-%d')
+                
                 if end_date < start_date:
                     raise ValueError("End date cannot be earlier than start date")
-                
-                # Check if dates are in the future
-                now = datetime.now()
-                if start_date > now or end_date > now:
-                    logger.warning("Backtest dates include future dates. This may result in empty data.")
+            
+            # Check if dates are in the future
+            now = datetime.now()
+            if start_date > now:
+                logger.warning("Start date is in the future. This may result in empty data.")
+            if end_date and end_date > now:
+                logger.warning("End date is in the future. This may result in empty data.")
         except ValueError as e:
             raise ValueError(f"Invalid date format in backtest configuration: {e}")
         
@@ -155,5 +178,7 @@ class Config:
         return {
             'save_results': output.get('save_results', True),
             'plot_charts': output.get('plot_charts', True),
-            'verbose': output.get('verbose', True)
+            'verbose': output.get('verbose', True),
+            'save_charts': output.get('save_charts', True),
+            'save_report': output.get('save_report', True)
         } 

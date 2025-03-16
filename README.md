@@ -6,6 +6,7 @@ This application analyzes cryptocurrency data to identify which harmonic pattern
 
 - Fetch cryptocurrency data from various exchanges including Binance.US
 - Detect multiple harmonic patterns (Gartley, Butterfly, Bat, Crab, Shark, Cypher)
+- Analyze price action patterns and market structure
 - Backtest pattern performance with customizable parameters
 - Generate performance reports and visualizations
 - Compare different patterns to find the best performer
@@ -70,6 +71,13 @@ output:
   save_results: true
   plot_charts: true
   verbose: true
+
+# Price action settings
+price_action:
+  enabled: true
+  detect_support_resistance: true
+  analyze_candlesticks: true
+  volume_analysis: true
 ```
 
 ## Usage
@@ -144,6 +152,34 @@ The application supports the following harmonic patterns:
 - Cypher
 
 Each pattern has specific Fibonacci ratio requirements and is detected based on price swing points.
+
+## Price Action Algorithms
+
+The application also includes price action analysis algorithms that can be used alongside harmonic patterns:
+
+### Market Structure Analysis
+
+- **Support and Resistance Detection**: Identifies key price levels where the market has historically reversed
+- **Trend Analysis**: Determines the current market trend using higher highs/higher lows (uptrend) or lower highs/lower lows (downtrend)
+- **Swing Point Detection**: Identifies significant swing highs and swing lows in the price action
+
+### Candlestick Patterns
+
+- **Engulfing Patterns**: Detects bullish and bearish engulfing patterns
+- **Doji Formations**: Identifies doji candlesticks that signal potential reversals
+- **Pin Bars**: Detects pin bar (hammer/shooting star) formations that indicate rejection of price levels
+
+### Volume Analysis
+
+- **Volume Confirmation**: Analyzes volume to confirm the strength of price movements
+- **Volume Divergence**: Detects divergences between price action and volume
+
+### Combining Approaches
+
+For optimal results, the application can combine harmonic patterns with price action analysis:
+- Use price action to confirm harmonic pattern completions
+- Filter harmonic pattern signals based on market structure
+- Enhance entry and exit timing using candlestick patterns
 
 ## Extending the Application
 

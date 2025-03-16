@@ -306,26 +306,47 @@ class DataFetcher:
         Fetch OHLCV (Open, High, Low, Close, Volume) data for the specified symbol and timeframe.
         
         Args:
-            start_date (str): Start date in 'YYYY-MM-DD' format
-            end_date (str, optional): End date in 'YYYY-MM-DD' format. Defaults to current date.
+            start_date (str or date): Start date in 'YYYY-MM-DD' format or as a date object
+            end_date (str or date, optional): End date in 'YYYY-MM-DD' format or as a date object. Defaults to current date.
             
         Returns:
             pandas.DataFrame: DataFrame with OHLCV data
         """
         # Use Alpha Vantage API if selected
         if self.exchange_name == 'alphavantage':
-            return self.fetch_alphavantage_data(start_date, end_date)
+            # Convert date objects to strings if needed
+            start_date_str = start_date.strftime('%Y-%m-%d') if hasattr(start_date, 'strftime') else start_date
+            end_date_str = end_date.strftime('%Y-%m-%d') if end_date and hasattr(end_date, 'strftime') else end_date
+            return self.fetch_alphavantage_data(start_date_str, end_date_str)
         
         # Otherwise use CCXT
         if not self.exchange.has['fetchOHLCV']:
             raise Exception(f"{self.exchange_name} does not support fetching OHLCV data")
         
         # Convert dates to timestamps
-        start_timestamp = int(datetime.strptime(start_date, '%Y-%m-%d').timestamp() * 1000)
-        if end_date:
-            end_timestamp = int(datetime.strptime(end_date, '%Y-%m-%d').timestamp() * 1000)
+        if hasattr(start_date, 'strftime'):
+            # It's a date or datetime object
+            start_timestamp = int(datetime.combine(start_date, datetime.min.time()).timestamp() * 1000)
+            # Also store as datetime for filtering
+            start_dt = datetime.combine(start_date, datetime.min.time())
         else:
-            end_timestamp = int(datetime.now().timestamp() * 1000)
+            # It's a string
+            start_dt = datetime.strptime(start_date, '%Y-%m-%d')
+            start_timestamp = int(start_dt.timestamp() * 1000)
+        
+        if end_date:
+            if hasattr(end_date, 'strftime'):
+                # It's a date or datetime object
+                end_timestamp = int(datetime.combine(end_date, datetime.min.time()).timestamp() * 1000)
+                # Also store as datetime for filtering
+                end_dt = datetime.combine(end_date, datetime.min.time())
+            else:
+                # It's a string
+                end_dt = datetime.strptime(end_date, '%Y-%m-%d')
+                end_timestamp = int(end_dt.timestamp() * 1000)
+        else:
+            end_dt = datetime.now()
+            end_timestamp = int(end_dt.timestamp() * 1000)
         
         logger.info(f"Fetching {self.symbol} data from {start_date} to {end_date or 'now'}")
         
@@ -367,9 +388,8 @@ class DataFetcher:
         df['timestamp'] = pd.to_datetime(df['timestamp'], unit='ms')
         df.set_index('timestamp', inplace=True)
         
-        # Filter by end date
-        if end_date:
-            df = df[df.index <= end_date]
+        # Filter by date range using datetime objects
+        df = df[(df.index >= pd.Timestamp(start_dt)) & (df.index <= pd.Timestamp(end_dt))]
         
         logger.info(f"Successfully fetched {len(df)} candles")
         return df
